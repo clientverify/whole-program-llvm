@@ -423,6 +423,11 @@ def isLinkOption(arg):
 
 # This command does not have the executable with it
 def buildAndAttachBitcode(builder):
+    llvmCompilerFlagsEnv = 'LLVM_COMPILER_FLAGS'
+    flags = os.getenv(llvmCompilerFlagsEnv) # Optional
+    if flags:
+      _logger.info('WLLVM compiler flags "{0}"'.format(flags))
+
     af = builder.getBitcodeArglistFilter()
     if len(af.inputFiles) == 0 or af.isAssembly or af.isAssembleOnly:
         return
@@ -430,6 +435,7 @@ def buildAndAttachBitcode(builder):
     bcc.extend(af.filteredArgs)
     bcc.append('-c')
     bcc.extend(builder.extraBitcodeArgs(af))
+    bcc.extend(flags.split(" "))
     # Filter out linker options since we are compiling with -c.  If we
     # leave them in, clang will emit warnings.  Some configure scripts
     # check to see if there was any output on stderr instead of the
