@@ -435,7 +435,8 @@ def buildAndAttachBitcode(builder):
     bcc.extend(af.filteredArgs)
     bcc.append('-c')
     bcc.extend(builder.extraBitcodeArgs(af))
-    bcc.extend(flags.split(" "))
+    if flags:
+        bcc.extend(flags.split())
     # Filter out linker options since we are compiling with -c.  If we
     # leave them in, clang will emit warnings.  Some configure scripts
     # check to see if there was any output on stderr instead of the
